@@ -1,0 +1,19 @@
+name: CI
+
+on: [push]
+
+jobs:
+  terraform-validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - run: terraform init -backend=false
+      - run: terraform fmt -check
+      - run: terraform validate
+
+  afficher-environnement:
+    runs-on: ubuntu-latest
+    needs: terraform-validate
+    steps:
+      - run: echo "Deploiement cible : ${{ vars.APP_ENV }}"
